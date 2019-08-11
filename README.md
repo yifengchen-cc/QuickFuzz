@@ -1,5 +1,13 @@
 # QuickFuzz
+Due to the stack and ghc version updates, some dependencies are not installed properly and cannot be compiled directly. I modified the installation script and downloaded the compiled version from the official website to temporarily solve the problem.I will continue to solve the compilation problem under the new stack and ghc.
+This update is to solve some bugs when radamsa and honggfuzz compilating.
+The method for temporarily solving the problem is as follows:
+```
+bash install_fuzzers_dev.sh
+bzip2 -dk QuickFuzz.bz2 
+```
 
+# Origin
 QuickFuzz, a tool written in Haskell designed for testing un-
 expected inputs of common file formats on third-party software,
 taking advantage of off-the-shelf, well known fuzzers.
