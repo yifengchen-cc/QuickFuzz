@@ -1,0 +1,40 @@
+--- Makefile	2019-08-10 02:28:37.411659109 -0700
++++ Makefile	2019-08-10 02:52:04.587056532 -0700
+@@ -20,7 +20,7 @@
+ 
+ # Common for all architectures
+ BIN := honggfuzz
+-COMMON_CFLAGS := -D_GNU_SOURCE -Wall -Werror
++COMMON_CFLAGS := -D_GNU_SOURCE -Wall 
+ COMMON_LDFLAGS := -lm
+ COMMON_SRCS := honggfuzz.c cmdline.c display.c log.c files.c fuzz.c report.c mangle.c util.c
+ INTERCEPTOR_SRCS := $(wildcard interceptor/*.c)
+@@ -34,8 +34,8 @@
+     CC ?= gcc
+     LD = $(CC)
+     ARCH_CFLAGS := -std=c11 -I. -I/usr/local/include -I/usr/include \
+-                   -Wextra -Wno-initializer-overrides -Wno-override-init \
+-                   -Wno-unknown-warning-option -funroll-loops -O2 \
++                   -Wextra -Wno-override-init \
++                   -funroll-loops -O2 \
+                    -D_FILE_OFFSET_BITS=64
+     ARCH_LDFLAGS := -lpthread -L/usr/local/include -L/usr/include \
+                     -lunwind-ptrace -lunwind-generic -lbfd -lopcodes -lrt
+@@ -44,7 +44,7 @@
+     ifeq ("$(wildcard /usr/include/bfd.h)","")
+         WARN_LIBRARY += binutils-devel
+     endif
+-    ifeq ("$(wildcard /usr/include/libunwind-ptrace.h)","")
++    ifeq ("$(wildcard /usr/include/x86_64-linux-gnu/libunwind-ptrace.h)" && "$(wildcard /usr/include/libunwind-ptrace.h)" ,"")
+         WARN_LIBRARY += libunwind-devel/libunwind8-devel
+     endif
+     ifdef WARN_LIBRARY
+@@ -91,7 +91,7 @@
+                    -x objective-c -pedantic \
+                    -Wimplicit -Wunused -Wcomment -Wchar-subscripts -Wuninitialized \
+                    -Wreturn-type -Wpointer-arith -Wno-gnu-case-range -Wno-gnu-designator \
+-                   -Wno-deprecated-declarations -Wno-unknown-pragmas -Wno-attributes
++                   -Wno-unknown-pragmas -Wno-attributes
+     ARCH_LDFLAGS := -F/System/Library/PrivateFrameworks -framework CoreSymbolication -framework IOKit \
+                     -F$(SDK)/System/Library/Frameworks -F$(SDK)/System/Library/PrivateFrameworks \
+                     -framework Foundation -framework ApplicationServices -framework Symbolication \

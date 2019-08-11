@@ -1,0 +1,31 @@
+--- linux/bfd.c	2019-08-06 09:18:30.847408654 -0700
++++ linux/bfd.c	2019-08-06 09:20:23.153385056 -0700
+@@ -46,6 +46,14 @@
+     asymbol **syms;
+ } bfd_t;
+ 
++/*
++ * This is probably the only define which was added with binutils 2.29, so we us
++ * it, do decide which disassembler() prototype from dis-asm.h to use
++ */
++#if defined(FOR_EACH_DISASSEMBLER_OPTION)
++#define _HF_BFD_GE_2_29
++#endif
++
+ static pthread_mutex_t arch_bfd_mutex = PTHREAD_MUTEX_INITIALIZER;
+ 
+ static bool arch_bfdInit(pid_t pid, bfd_t * bfdParams)
+@@ -162,8 +170,12 @@
+         LOG_W("bfd_check_format() failed");
+         goto out;
+     }
+-
++#if defined(_HF_BFD_GE_2_29)
++    disassembler_ftype disassemble =
++        disassembler(bfd_get_arch(bfdh), bfd_little_endian(bfdh) ? FALSE : TRUE, 0, NULL);
++#else
+     disassembler_ftype disassemble = disassembler(bfdh);
++#endif                          // defined(_HD_BFD_GE_2_29)
+     if (disassemble == NULL) {
+         LOG_W("disassembler() failed");
+         goto out;
